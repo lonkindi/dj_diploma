@@ -1,0 +1,49 @@
+{% extends "app/_base.html" %}
+
+{% block title %}Вход в магазин{% endblock %}
+
+{% block hint %}
+<div class="jumbotron">
+    <div class="container">
+        <h2 class="display-4">Введите свои данные для входа</h2>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <form action="/login/"method="post">
+            {%csrf_token%}
+            {{form}}
+            <input type="submit"value="Submit">
+        </form>
+<!--        <form class="form-signin">-->
+<!--            <input type="hidden" name="next" value="">-->
+<!--            <img class="mb-4" src="./static/logo.svg" alt="" width="72" height="72">-->
+
+
+<!--            <h1 class="h3 mb-3 font-weight-normal">Вход</h1>-->
+<!--            <hr>-->
+
+<!--                        <span>Логин: </span>-->
+<!--            <input type="text" id="inputEmail" class="form-control" placeholder="Login" name="username"-->
+<!--                   value="" required="" autofocus="" data-cip-id="inputLogin">-->
+
+<!--&lt;!&ndash;            <span>E-mail: </span>&ndash;&gt;-->
+<!--&lt;!&ndash;            <input type="email" id="inputEmail" class="form-control" placeholder="Email" name="username"&ndash;&gt;-->
+<!--&lt;!&ndash;                   value="" required="" autofocus="" data-cip-id="inputEmail">&ndash;&gt;-->
+
+<!--            <p></p>-->
+<!--            <span>Пароль: </span>-->
+<!--            <input type="password" id="inputPassword" class="form-control" placeholder="Пароль"-->
+<!--                   name="password" required="" data-cip-id="inputPassword">-->
+<!--            <p></p>-->
+<!--            <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>-->
+<!--        </form>-->
+    </div>
+</div>
+{% endblock %}
+
+{% block advice %}
+{% endblock %}

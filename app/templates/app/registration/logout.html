@@ -1,0 +1,25 @@
+{% extends "app/_base.html" %}
+
+{% block title %}Выход из магазина{{current_section}}{% endblock %}
+
+{% block hint %}
+<div class="jumbotron">
+    <div class="container">
+      <h2 class="display-4">Вы покинули магазин</h2>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <a href="{% url 'login' %}">
+          Нажмите на эту ссылку или на кнопку в правом верхнем углу экрана, чтобы зайти в магазин снова
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block advice %}
+{% endblock %}
+
