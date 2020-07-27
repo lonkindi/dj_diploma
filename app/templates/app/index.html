@@ -1,4 +1,4 @@
-{% extends "./_base.html" %}
+{% extends "./_base.html" %}{% load static %}
 
 {% block title %}Главная страница{% endblock %}
 
@@ -46,7 +46,7 @@
 
         <a href="./phone.html">
 
-          <img src="./static/fufajka.jpg" width="180">
+          <img src={% static "media/fufajka.jpg" %} width="180">
 
         </a>
 

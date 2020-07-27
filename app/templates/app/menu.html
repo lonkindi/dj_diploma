@@ -2,7 +2,7 @@
 {% load static %}
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="./index.html">Просто магазин</a>
-    <img src="/static/logo.svg" alt="" width="42" height="42">
+    <img src={% static "media/logo.svg" %} alt="" width="42" height="42">
     <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
             aria-expanded="false" aria-label="Toggle navigation">
@@ -17,14 +17,14 @@
             </li>
 
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="{{ node.id }}" id="dropdown01"
+                <a class="nav-link dropdown-toggle" href="section/{{ node.id }}" id="dropdown01"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Каталог товаров</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <ul>
                         {% recursetree sections %}
                         <li>
-                            <a class="dropdown-item" href="{{ node.id }}">{{ node.name }}</a>
+                            <a class="dropdown-item" href="section/{{ node.id }}">{{ node.name }}</a>
                             <ul>
                                 {{ children }}
                             </ul>
@@ -34,41 +34,9 @@
                 </div>
             </li>
 
-            <!--    {% recursetree sections %}-->
-            <!--      <li class="nav-item dropdown">-->
-            <!--            <a {% if not node.is_leaf_node %}class="nav-link dropdown-toggle" data-toggle="dropdown"-->
-            <!--               aria-haspopup="true" aria-expanded="false" {% else %} class="dropdown-item" {% endif %}-->
-            <!--               href={{node.id}} id={{ node.pk }}>{{ node.name }}</a>-->
-            <!--            {% if not node.is_leaf_node %}-->
-            <!--                <ul class="nav-item dropdown" aria-labelledby={{ node.pk }}>-->
-            <!--                    {{ children }}-->
-            <!--                </ul>-->
-            <!--            {% endif %}-->
-            <!--        </li>-->
-            <!--    {% endrecursetree %}-->
-
-            <!--      <li class="nav-item active dropdown">-->
-            <!--        <a class="nav-link dropdown-toggle" href="#" id="dropdown01"-->
-            <!--           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-            <!--          Гаджеты</a>-->
-            <!--        <div class="dropdown-menu" aria-labelledby="dropdown01">-->
-
-            <!--          <a class="dropdown-item" href="./section.html">-->
-            <!--            Сматрфоны</a>-->
-
-            <!--        </div>-->
-            <!--      </li>-->
-
-
-            <!--      <li class="nav-item">-->
-            <!--        <a class="nav-link" href="./empty_section.html">-->
-            <!--          Аксесcуары</a>-->
-            <!--      </li>-->
-
-
         </ul>
         <a class="btn btn-outline-success my-2 my-sm-0" role="button"
-           href="./cart.html">
+           href="{% url 'cart' %}">
             Корзина</a>
 
         {% if request.user.is_authenticated %}
@@ -80,10 +48,6 @@
            href="{% url 'login' %}">
             Войти</a>
         {% endif %}
-
-        <!--    <a class="btn btn-outline-success my-2 my-sm-0" role="button"-->
-        <!--       href="./login.html">-->
-        <!--      Войти</a>-->
 
     </div>
 </nav>

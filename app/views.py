@@ -74,7 +74,7 @@ def good_view(request):
     context = {}
     return render(request, template_name=template, context=context)
 
-# def main_view(request):
-#     template = 'app/empty_section.html'
-#     context = {}
-#     return render(request, template_name=template, context=context)
+def cart_view(request):
+    template = 'app/cart.html'
+    context = {}
+    return render(request, template_name=template, context=context)
