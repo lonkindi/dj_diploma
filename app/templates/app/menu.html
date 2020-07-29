@@ -17,14 +17,14 @@
             </li>
 
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="section/{{ node.id }}" id="dropdown01"
+                <a class="nav-link dropdown-toggle" href="./{{ node.id }}" id="dropdown01"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Каталог товаров</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                     <ul>
                         {% recursetree sections %}
                         <li>
-                            <a class="dropdown-item" href="section/{{ node.id }}">{{ node.name }}</a>
+                            <a class="dropdown-item" href="./{{ node.id }}">{{ node.name }}</a>
                             <ul>
                                 {{ children }}
                             </ul>

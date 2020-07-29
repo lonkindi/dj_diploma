@@ -1,12 +1,13 @@
 {% extends "./_base.html" %}
+{% load mptt_tags %}
 
-{% block title %}Пустой раздел{% endblock %}
+{% block title %}{{current_section}}{% endblock %}
 
 {% block hint %}
 <div class="jumbotron">
     <div class="container">
-        <h1 class="display-4">Добро пожаловать на сайт просто магазина</h1>
-        <p>Лучшие мобилы и фуфайки только у нас!</p>
+        <h1 class="display-4">{{current_section}}</h1>
+<!--        <p>Лучшие мобилы и фуфайки только у нас!</p>-->
     </div>
 </div>
 {% endblock %}
@@ -14,12 +15,22 @@
 {% block content %}
 <div class="container">
     <!-- Example row of columns -->
-
-
+{% if section_page %}
+    <ul>
+        {% recursetree section_page %}
+        <li>
+            <a class="dropdown-item" href="./{{ node.id }}">{{ node.name }}</a>
+            <ul>
+                {{ children }}
+            </ul>
+        </li>
+        {% endrecursetree %}
+    </ul>
+    {% else %}
     <div class="alert alert-dark" role="alert">
         В этом разделе пока ничего нет!
     </div>
-
+{% endif %}
 
 </div> <!-- /container -->
 {% endblock %}

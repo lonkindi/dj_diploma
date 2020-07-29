@@ -1,30 +1,38 @@
-{% extends "./_base.html" %}{% load static %}
+{% extends "./_base.html" %}
+{% load static %}
+{% load mptt_tags %}
 
 {% block title %}Раздел {{current_section}}{% endblock %}
 
 {% block hint %}
 <div class="jumbotron">
     <div class="container">
-      <h2 class="display-4">{{current_section}}</h2>
+        <h2 class="display-4">{{current_section}}</h2>
     </div>
-  </div>
+</div>
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
-      {% for product in product_list %}
-      <div class="col-md-4">
-        <h2>{{product.name}}</h2>
-        <a href="./phone.html">
-          <img src="{{product.photo.url}}" width="180">
-        </a>
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
-        </form>
-      </div>
-      {% endfor %}
+        {% for product in prod_page %}
+        <div class="col-md-4">
+            <h2>{{product.name}}</h2>
+            <a href="./phone.html">
+                <img src="{{product.photo.url}}" width="180">
+            </a>
+            <form>
+                <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
+            </form>
+        </div>
+        {% endfor %}
+
     </div>
+    {% if prev_page_url %}<a class="btn button-primary" href="{{ prev_page_url }}">⟵</a>{% endif %}
+    <a class="btn button disabled" href="">{{ current_page }}</a>
+    {% if next_page_url %}<a class="btn button-primary" href="{{ next_page_url }}">⟶</a>{% endif %}
+
+
 </div>
 {% endblock %}
 
