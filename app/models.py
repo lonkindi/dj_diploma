@@ -30,3 +30,10 @@ class Order(models.Model):
     number = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+
+class Review(models.Model):
+    name = models.CharField(max_length=100)
+    text = models.TextField()
+    rating = models.PositiveIntegerField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)

@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 
 from app.forms import LoginForm
-from app.models import Section, Product
+from app.models import Section, Product, Review
 
 
 def main_view(request):
@@ -84,9 +84,18 @@ def section_view(request, id=0):
                }
     return render(request, template_name=template, context=context)
 
-def good_view(request):
+def good_view(request, id=1):
+    id = request.GET.get('id')
+    if id:
+        good = Product.objects.filter(id=id)[0]
+        reviews = Review.objects.filter(product=id)
+    else:
+        good = ''
     template = 'app/good.html'
-    context = {}
+    context = {'good': good,
+               'reviews': reviews
+            }
+    print('good=', good)
     return render(request, template_name=template, context=context)
 
 def cart_view(request):
