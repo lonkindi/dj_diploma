@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 
-from app.forms import LoginForm
+from app.forms import LoginForm, ReviewForm
 from app.models import Section, Product, Review
 
 
@@ -14,6 +14,7 @@ def main_view(request):
 
                }
     return render(request, template_name=template, context=context)
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -36,11 +37,13 @@ def login_view(request):
     context = {'form': form}
     return render(request, template_name=template, context=context)
 
+
 def logout_view(request):
     logout(request)
     template = 'app/registration/logout.html'
     context = {}
     return render(request, template_name=template, context=context)
+
 
 def section_view(request, id=0):
     prod_page = ''
@@ -84,7 +87,9 @@ def section_view(request, id=0):
                }
     return render(request, template_name=template, context=context)
 
+
 def good_view(request, id=1):
+    sections = Section.objects.all()
     id = request.GET.get('id')
     if id:
         good = Product.objects.filter(id=id)[0]
@@ -92,11 +97,15 @@ def good_view(request, id=1):
     else:
         good = ''
     template = 'app/good.html'
-    context = {'good': good,
-               'reviews': reviews
-            }
-    print('good=', good)
+    form = ReviewForm()
+    context = {'sections': sections,
+               'good': good,
+               'reviews': reviews,
+               'form': form,
+               }
+    # print('good=', good)
     return render(request, template_name=template, context=context)
+
 
 def cart_view(request):
     template = 'app/cart.html'
