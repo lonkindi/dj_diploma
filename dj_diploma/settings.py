@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'mptt',
-    'my_filters',
 ]
 
 MIDDLEWARE = [

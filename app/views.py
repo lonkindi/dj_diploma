@@ -28,8 +28,8 @@ def login_view(request):
             if user.is_active:
                 login(request, user)
                 return redirect(main_view)
-            else:
-                pass
+            # else:
+            #     pass
         else:
             return HttpResponse('Invalid login or passpword!')
     template = 'app/registration/login.html'
@@ -111,3 +111,12 @@ def cart_view(request):
     template = 'app/cart.html'
     context = {}
     return render(request, template_name=template, context=context)
+
+def add_cart_view(request):
+    if request.method == 'POST':
+        id = request.GET.get('id')
+        print('id=', id)
+    return HttpResponse('Товар добавлен в корзину', id)
+    # template = 'app/cart.html'
+    # context = {}
+    # return render(request, template_name=template, context=context)
