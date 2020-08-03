@@ -1,6 +1,7 @@
 {% extends "./_base.html" %}
 {% load static %}
 {% load mptt_tags %}
+{% load my_filters %}
 
 {% block title %}Товар {{good.name}}{% endblock %}
 
@@ -32,8 +33,11 @@
     </div>
     <hr>
     {% for review in reviews %}
+    {{review.rating|stars}}
     ★{{review.rating}}★ <span>{{review.name}}</span>
     <p> {{review.text}}</p>
+    {% empty %}
+    <p>Для этого товара ещё никто не оставил отзыв :-( </p>
     {% endfor %}
     <hr>
 
@@ -51,11 +55,12 @@
                     <label for="text">Текст отзыва</label>
                     {{form.text}}
                 </div>
-                <div class="form-check">
-                    Оценка
-                    {{form.rating}}
-                </div>
-
+                    Ваша оценка:
+{% for radio in form.rating %}
+<div class="form-check">
+    {{ radio }}
+</div>
+{% endfor %}
 
                 <!--          <div class="form-check">-->
                 <!--            <input class="form-check-input" type="radio" name="mark" id="mark1" value="1">-->
@@ -92,7 +97,7 @@
                 <!--            </label>-->
                 <!--          </div>-->
 
-                <button type="submit" class="btn btn-primary">Оставить</button>
+                <button type="submit" class="btn btn-primary">Оставить отзыв</button>
             </form>
         </div>
     </div>
