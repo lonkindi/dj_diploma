@@ -108,16 +108,40 @@ def good_view(request, id=1):
 
 def cart_view(request):
     sections = Section.objects.all()
-    status_cart = 'Ваша корзина'
+    my_cart = request.session.get('my_cart', dict())
+    status_cart = 'В корзине нет товаров'
     items_cart = []
+    if request.method == 'POST':
+        id = request.GET.get('id')
+        order = request.GET.get('Order')
+        clear = request.GET.get('Clear')
+        if id:
+            # my_cart = request.session.get('my_cart', dict())
+            quantity = my_cart.get(id)
+            if not quantity:
+                quantity = 0
+            print('my_cart=',my_cart)
+            request.session['my_cart']={id: quantity+1}
+            request.session.modified = True
+            status_cart = 'Товар добавлен в корзину'
+        if order:
+            print('Order=', type(order))
+            status_cart = 'Заказ оформлен'
+        if clear:
+            if request.session.get('my_cart'):
+                del request.session['my_cart']
+                status_cart = 'Корзина очищена'
+
+
     my_cart = request.session.get('my_cart', dict())
     if my_cart:
         for item in my_cart:
             good = Product.objects.filter(id=int(item))[0]
             quantity = my_cart[item]
-            items_cart.append((good.name, good.inf, quantity))
-    else:
-        status_cart = 'В корзине нет товаров'
+            items_cart.append((good.id, good.name, good.inf, quantity))
+        status_cart = 'Ваша корзина'
+    # else:
+    #     status_cart = 'В корзине нет товаров'
 
     template = 'app/cart.html'
     total_cart = len(items_cart)
@@ -129,17 +153,17 @@ def cart_view(request):
     return render(request, template_name=template, context=context)
 
 
-def add_cart_view(request):
-    if request.method == 'POST':
-        id = request.GET.get('id')
-        my_cart = request.session.get('my_cart')
-        quantity = my_cart.get(id)
-        if not quantity:
-            quantity = 0
-        request.session['my_cart'][id] = quantity+1
-        request.session.modified = True
-        print("request.session['my_cart']=", request.session.get('my_cart'))
-    return HttpResponse(f'Товар добавлен в корзину - {id}')
-    # template = 'app/cart.html'
-    # context = {}
-    # return render(request, template_name=template, context=context)
+# def add_cart_view(request):
+#     if request.method == 'POST':
+#         id = request.GET.get('id')
+#         my_cart = request.session.get('my_cart', dict())
+#         quantity = my_cart.get(int(id))
+#         if not quantity:
+#             quantity = 0
+#         request.session['my_cart'][id] = quantity+1
+#         request.session.modified = True
+#         print("request.session['my_cart']=", request.session.get('my_cart'))
+#     return HttpResponse(f'Товар добавлен в корзину - {id}')
+#     # template = 'app/cart.html'
+#     # context = {}
+#     # return render(request, template_name=template, context=context)

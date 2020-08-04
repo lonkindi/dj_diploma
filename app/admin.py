@@ -2,6 +2,7 @@ from django.contrib import admin
 from mptt.admin import MPTTModelAdmin, DraggableMPTTAdmin
 from .models import Product, Section, Order, Article, Review
 
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     pass

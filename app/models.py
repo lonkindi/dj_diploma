@@ -41,7 +41,7 @@ class Article(models.Model):
 class Order(models.Model):
     number = models.PositiveIntegerField()
     quantity = models.PositiveIntegerField()
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ManyToManyField(Product)
 
     class Meta:
         verbose_name = 'Заказ'
