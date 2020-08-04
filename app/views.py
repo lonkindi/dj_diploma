@@ -103,20 +103,43 @@ def good_view(request, id=1):
                'reviews': reviews,
                'form': form,
                }
-    # print('good=', good)
     return render(request, template_name=template, context=context)
 
 
 def cart_view(request):
+    sections = Section.objects.all()
+    status_cart = 'Ваша корзина'
+    items_cart = []
+    my_cart = request.session.get('my_cart', dict())
+    if my_cart:
+        for item in my_cart:
+            good = Product.objects.filter(id=int(item))[0]
+            quantity = my_cart[item]
+            items_cart.append((good.name, good.inf, quantity))
+    else:
+        status_cart = 'В корзине нет товаров'
+
     template = 'app/cart.html'
-    context = {}
+    total_cart = len(items_cart)
+    context = {'sections': sections,
+               'total_cart': total_cart,
+               'items_cart': items_cart,
+               'status_cart': status_cart,
+               }
     return render(request, template_name=template, context=context)
+
 
 def add_cart_view(request):
     if request.method == 'POST':
         id = request.GET.get('id')
-        print('id=', id)
-    return HttpResponse('Товар добавлен в корзину', id)
+        my_cart = request.session.get('my_cart')
+        quantity = my_cart.get(id)
+        if not quantity:
+            quantity = 0
+        request.session['my_cart'][id] = quantity+1
+        request.session.modified = True
+        print("request.session['my_cart']=", request.session.get('my_cart'))
+    return HttpResponse(f'Товар добавлен в корзину - {id}')
     # template = 'app/cart.html'
     # context = {}
     # return render(request, template_name=template, context=context)
