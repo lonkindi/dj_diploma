@@ -42,7 +42,7 @@
         <div class="col-lg-6 col-md-8 col-sm-12">
             <h4>Оставьте отзыв:</h4>
 
-            <form action="./merch/1/feedback" method="post">
+            <form action="?feedback={{good.id}}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="name">Ваше имя</label>

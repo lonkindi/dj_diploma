@@ -90,12 +90,24 @@ def section_view(request, id=0):
 
 def good_view(request, id=1):
     sections = Section.objects.all()
+    if request.method == 'POST':
+        review_form = ReviewForm(request.GET)
+        print(review_form)#review_form.name, review_form.text, review_form.rating)
+        fb_id = request.GET.get('feedback')
+        if fb_id:
+            name = 'Test'
+            text = 'Text'
+            rating = 4
+            product = Product.objects.get(id=int(fb_id))
+            new_feedback = Review(name=name, text=text, rating=rating, product=product)
+            # new_feedback.save()
     id = request.GET.get('id')
     if id:
-        good = Product.objects.filter(id=id)[0]
+        good = Product.objects.get(id=id)
         reviews = Review.objects.filter(product=id)
     else:
-        good = ''
+        good = Product.objects.get(id=int(fb_id))
+        reviews = Review.objects.get(product=int(fb_id))
     template = 'app/good.html'
     form = ReviewForm()
     context = {'sections': sections,
