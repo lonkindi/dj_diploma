@@ -88,27 +88,31 @@ def section_view(request, id=0):
     return render(request, template_name=template, context=context)
 
 
-def good_view(request, id=1):
+def good_view(request):
     sections = Section.objects.all()
+    template = 'app/good.html'
+    good = ''
+    reviews = ''
     if request.method == 'POST':
-        review_form = ReviewForm(request.GET)
-        print(review_form)#review_form.name, review_form.text, review_form.rating)
         fb_id = request.GET.get('feedback')
         if fb_id:
-            name = 'Test'
-            text = 'Text'
-            rating = 4
-            product = Product.objects.get(id=int(fb_id))
+            review_form = ReviewForm(request.POST or None)
+            if review_form.is_valid():
+                name = review_form.cleaned_data.get('name')
+                text = review_form.cleaned_data.get('text')
+                rating = review_form.cleaned_data.get('rating')
+                product = Product.objects.filter(id=int(fb_id))[0]
+                print('product=', product)
             new_feedback = Review(name=name, text=text, rating=rating, product=product)
-            # new_feedback.save()
+            new_feedback.save()
     id = request.GET.get('id')
     if id:
-        good = Product.objects.get(id=id)
-        reviews = Review.objects.filter(product=id)
-    else:
-        good = Product.objects.get(id=int(fb_id))
-        reviews = Review.objects.get(product=int(fb_id))
-    template = 'app/good.html'
+        good = Product.objects.filter(id=int(id))[0]
+        if good:
+            reviews = Review.objects.filter(product=int(id))
+        else:
+            template = 'app/empty_section.html'
+
     form = ReviewForm()
     context = {'sections': sections,
                'good': good,
@@ -132,8 +136,7 @@ def cart_view(request):
             quantity = my_cart.get(id)
             if not quantity:
                 quantity = 0
-            print('my_cart=',my_cart)
-            request.session['my_cart']={id: quantity+1}
+            request.session['my_cart'] = {id: quantity+1}
             request.session.modified = True
             status_cart = 'Товар добавлен в корзину'
         if order:
