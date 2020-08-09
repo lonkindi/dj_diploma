@@ -1,7 +1,10 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin, DraggableMPTTAdmin
-from .models import Product, Section, Order, Article, Review
+from .models import Product, Section, Order, Article, Review, ArticleRelation
 
+
+class RelationshipInline(admin.TabularInline):
+    model = ArticleRelation
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -22,7 +25,10 @@ class ProductOrder(admin.ModelAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    pass
+    inlines = [RelationshipInline]
+    list_display = ('caption',)
+
+
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):

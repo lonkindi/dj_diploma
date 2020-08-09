@@ -4,14 +4,14 @@ from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 
 from app.forms import LoginForm, ReviewForm
-from app.models import Section, Product, Review
+from app.models import Section, Product, Review, Article
 
 
 def main_view(request):
     template = 'app/index.html'
     context = {'sections': Section.objects.all(),
-               'product_list': Product.objects.all()[:3],
-
+               'article_list': Article.objects.all(),
+               'product_list': Product.objects.all(),
                }
     return render(request, template_name=template, context=context)
 
@@ -168,7 +168,7 @@ def cart_view(request):
     return render(request, template_name=template, context=context)
 
 
-# def add_cart_view(request):
+# def add_order_view(request):
 #     if request.method == 'POST':
 #         id = request.GET.get('id')
 #         my_cart = request.session.get('my_cart', dict())

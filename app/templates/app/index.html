@@ -1,60 +1,42 @@
-{% extends "./_base.html" %}{% load static %}
+{% extends "./_base.html" %}
+{% load static %}
 
 {% block title %}Главная страница{% endblock %}
 
 {% block hint %}
-  <div class="jumbotron">
+<div class="jumbotron">
     <div class="container">
-      <h1 class="display-4">Добро пожаловать на сайт просто магазина</h1>
-      <p>Лучшие мобилы и фуфайки только у нас:</p>
+        <h1 class="display-4">Добро пожаловать на сайт просто магазина</h1>
+        <p>Лучшие мобилы и фуфайки только у нас</p>
     </div>
-  </div>
+</div>
+<hr>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-      {% for product in product_list %}
-      <div class="col-md-4">
-        <h2>{{product.name}}</h2>
-        <a href="./phone.html">
-          <img src="{{product.photo.url}}" width="180">
-        </a>
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
-        </form>
-      </div>
-      {% endfor %}
+{% for article in article_list %}
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-4">{{article.caption}}</h1>
+        <p>{{article.text}}</p>
     </div>
 </div>
+<div class="container">
+    <div class="row">
+        {% for good in article.articlerelation_set.all %}
+        <div class="col-md-4">
+            <h4>{{good.product.name}}</h4>
+            <a href="/good?id={{good.product.id}}">
+                <img src="{{good.product.photo.url}}" width="140">
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<hr>
+{% endfor %}
+
 {% endblock %}
 
 {% block advice %}
-  <div class="jumbotron">
-    <div class="container">
-      <h1 class="display-4">Не знаете что одеть летом?</h1>
-      <p>Вот что мы можем предложить:</p>
-    </div>
-  </div>
-
-  <div class="container mb-5">
-    <!-- Example row of columns -->
-    <div class="row">
-
-      <div class="col-md-4">
-        <h2>Фуфайка</h2>
-
-        <a href="./phone.html">
-
-          <img src={% static "media/fufajka.jpg" %} width="180">
-
-        </a>
-
-        <form>
-          <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
-        </form>
-      </div>
-
-    </div>
-  </div> <!-- /container -->
 {% endblock %}
