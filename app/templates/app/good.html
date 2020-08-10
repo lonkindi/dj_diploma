@@ -23,7 +23,7 @@
             <img src="{{good.photo.url}}" width="120">
 
             <p>{{good.inf}}</p>
-            <form method="post" action="/cart/?id={{good.id}}">
+            <form method="post" action="/cart?id={{good.id}}">
                 {% csrf_token %}
                 <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
             </form>

@@ -29,7 +29,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('cart/', views.cart_view, name='cart'),
-    path('cart/order', views.add_order_view, name='add_order'),
+    # path('cart/order', views.cart_order_view, name='cart_order'),
+    # path('cart/clear', views.cart_clear_view, name='cart_clear'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

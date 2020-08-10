@@ -1,10 +1,13 @@
+
+
 from django.contrib.auth import logout, authenticate, login
+import json
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 
 from app.forms import LoginForm, ReviewForm
-from app.models import Section, Product, Review, Article
+from app.models import Section, Product, Review, Article, Order
 
 
 def main_view(request):
@@ -93,6 +96,7 @@ def good_view(request):
     template = 'app/good.html'
     good = ''
     reviews = ''
+    sessionid = 'Not authorized'
     if request.method == 'POST':
         fb_id = request.GET.get('feedback')
         if fb_id:
@@ -102,8 +106,9 @@ def good_view(request):
                 text = review_form.cleaned_data.get('text')
                 rating = review_form.cleaned_data.get('rating')
                 product = Product.objects.filter(id=int(fb_id))[0]
-                print('product=', product)
-            new_feedback = Review(name=name, text=text, rating=rating, product=product)
+                if request.COOKIES.get('sessionid'):
+                    sessionid = request.COOKIES['sessionid']
+            new_feedback = Review(name=name, text=text, rating=rating, product=product, sessionid=sessionid)
             new_feedback.save()
     id = request.GET.get('id')
     if id:
@@ -124,31 +129,43 @@ def good_view(request):
 
 def cart_view(request):
     sections = Section.objects.all()
-    my_cart = request.session.get('my_cart', dict())
+    my_cart = request.COOKIES.get('my_cart', dict())
+    print('*** my_cart =', my_cart, type(my_cart))
+    my_cart1 = json.dumps(my_cart)
+    print('*** my_cart1 =', my_cart1, type(my_cart1))
+    my_cart2 = json.loads(my_cart1)
+    print('*** my_cart2=', my_cart2, type(my_cart2))
     status_cart = 'В корзине нет товаров'
     items_cart = []
     if request.method == 'POST':
-        id = request.GET.get('id')
-        order = request.GET.get('Order')
-        clear = request.GET.get('Clear')
+        id = request.GET.get('id') # add goods to cart
+        order = request.GET.get('order') #confirm order
+        clear = request.GET.get('clear') # clear cart
         if id:
+
             # my_cart = request.session.get('my_cart', dict())
             quantity = my_cart.get(id)
             if not quantity:
                 quantity = 0
-            request.session['my_cart'] = {id: quantity+1}
-            request.session.modified = True
+            my_cart[id] = quantity + 1
+            my_cart = json.loads(my_cart)
+            response = HttpResponse('Hello!')
+            response.set_cookie('my_cart', my_cart)
+            return response
+            print('my_cart *** =', my_cart)
             status_cart = 'Товар добавлен в корзину'
-        if order:
-            print('Order=', type(order))
+        elif order:
+            new_order = Order()
+            # del request.session['my_cart']
             status_cart = 'Заказ оформлен'
-        if clear:
-            if request.session.get('my_cart'):
-                del request.session['my_cart']
+        elif clear:
+            if request.COOKIES.get('my_cart'):
+                del request.COOKIES['my_cart']
                 status_cart = 'Корзина очищена'
+    else:
+        pass
+    my_cart = request.COOKIES.get('my_cart')
 
-
-    my_cart = request.session.get('my_cart', dict())
     if my_cart:
         for item in my_cart:
             good = Product.objects.filter(id=int(item))[0]
@@ -168,17 +185,27 @@ def cart_view(request):
     return render(request, template_name=template, context=context)
 
 
-# def add_order_view(request):
-#     if request.method == 'POST':
-#         id = request.GET.get('id')
-#         my_cart = request.session.get('my_cart', dict())
-#         quantity = my_cart.get(int(id))
-#         if not quantity:
-#             quantity = 0
-#         request.session['my_cart'][id] = quantity+1
-#         request.session.modified = True
-#         print("request.session['my_cart']=", request.session.get('my_cart'))
-#     return HttpResponse(f'Товар добавлен в корзину - {id}')
-#     # template = 'app/cart.html'
-#     # context = {}
-#     # return render(request, template_name=template, context=context)
+def review_add_view(request):
+    pass
+    # if request.method == 'POST':
+    #     id = request.GET.get('id')
+    #     my_cart = request.session.get('my_cart', dict())
+    #     quantity = my_cart.get(int(id))
+    #     if not quantity:
+    #         quantity = 0
+    #     my_cart[id] = quantity+1
+    #     request.session['my_cart'] = my_cart
+    #     request.session.modified = True
+    #     print("request.session['my_cart']=", request.session.get('my_cart'))
+    # # return HttpResponse(f'Товар добавлен в корзину - {id}')
+    # template = 'app/cart.html'
+    # context = {}
+    # return render(request, template_name=template, context=context)
+
+def cart_clear_view(request):
+    pass
+    # sections = Section.objects.all()
+    # template = 'app/cart.html'
+    # context = {'sections': sections,
+    #            }
+    # return render(request, template_name=template, context=context)

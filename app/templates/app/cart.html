@@ -26,7 +26,7 @@
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
                         <a href="/good?id={{id}}">
-                        <h6 class="my-0">{{name}}</h6>
+                            <h6 class="my-0">{{name}}</h6>
                         </a>
                         <small class="text-muted">{{inf}}</small>
                     </div>
@@ -37,16 +37,22 @@
             </ul>
             <div class="row">
                 <span>
-            <form class="col-md-2" method="post" action="/cart/?Order=True">
+                    {% if request.user.is_authenticated %}
+            <form class="col-md-2" method="post" action="/cart/?order=True">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary">Заказать</button>
-            </form></span>
+            </form>
+                    {% else %}
+<!--                    <p>Для оформления заказа необходимо авторизоваться.</p>-->
+                    <a class="btn btn-secondary" href="{% url 'login' %}">Войти, чтобы заказать </a>
+                    {% endif %}
+                </span>
                 <span>
-            <form class="col-md-2" method="post" action="/cart/?Clear=True">
+            <form class="col-md-2" method="post" action="/cart/?clear=True">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary">Очистить</button>
             </form></span>
-</div>
+            </div>
         </div>
     </div>
 

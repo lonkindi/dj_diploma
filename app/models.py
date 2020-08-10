@@ -70,10 +70,10 @@ class Order(models.Model):
 
 
 class Review(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
     text = models.TextField()
     rating = models.PositiveIntegerField()
-    session = models.PositiveIntegerField()
+    sessionid = models.CharField(max_length=100)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def __str__(self):
