@@ -2,7 +2,7 @@
 
 from django.contrib.auth import logout, authenticate, login
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 
@@ -130,11 +130,9 @@ def good_view(request):
 def cart_view(request):
     sections = Section.objects.all()
     my_cart = request.COOKIES.get('my_cart', dict())
-    print('*** my_cart =', my_cart, type(my_cart))
-    my_cart1 = json.dumps(my_cart)
-    print('*** my_cart1 =', my_cart1, type(my_cart1))
-    my_cart2 = json.loads(my_cart1)
-    print('*** my_cart2=', my_cart2, type(my_cart2))
+    if my_cart:
+        my_cart = my_cart.replace(r"'", r'"')
+        my_cart = json.loads(my_cart)
     status_cart = 'В корзине нет товаров'
     items_cart = []
     if request.method == 'POST':
@@ -142,29 +140,43 @@ def cart_view(request):
         order = request.GET.get('order') #confirm order
         clear = request.GET.get('clear') # clear cart
         if id:
-
-            # my_cart = request.session.get('my_cart', dict())
             quantity = my_cart.get(id)
-            if not quantity:
+            if not my_cart or not quantity:
                 quantity = 0
+            else:
+                quantity = my_cart.get(id)
             my_cart[id] = quantity + 1
-            my_cart = json.loads(my_cart)
-            response = HttpResponse('Hello!')
+            my_cart = json.dumps(my_cart)
+            status_cart = 'Товар добавлен в корзину'
+            response = HttpResponseRedirect('./')
             response.set_cookie('my_cart', my_cart)
             return response
             print('my_cart *** =', my_cart)
-            status_cart = 'Товар добавлен в корзину'
+
         elif order:
-            new_order = Order()
-            # del request.session['my_cart']
-            status_cart = 'Заказ оформлен'
+            user = ''
+            number = ''
+            quantity = ''
+            product = ''
+            new_order = Order(user=user, number=number, quantity=quantity, product=product)
+            new_order.save()
+            if request.COOKIES.get('my_cart'):
+                response = HttpResponseRedirect('./')
+                response.delete_cookie('my_cart')
+                status_cart = 'Заказ оформлен'
+                return response
         elif clear:
             if request.COOKIES.get('my_cart'):
-                del request.COOKIES['my_cart']
+                response = HttpResponseRedirect('./')
+                response.delete_cookie('my_cart')
                 status_cart = 'Корзина очищена'
+                return response
     else:
         pass
-    my_cart = request.COOKIES.get('my_cart')
+    my_cart = request.COOKIES.get('my_cart', None)
+    if my_cart:
+        my_cart = my_cart.replace(r"'", r'"')
+        my_cart = json.loads(my_cart)
 
     if my_cart:
         for item in my_cart:

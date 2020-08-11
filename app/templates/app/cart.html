@@ -18,6 +18,7 @@
     <div class="row">
         <div class="col-lg-6 col-md-9 col-sm-12 order-md-2 mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
+                {% if total_cart %}
                 <span class="text-muted">Товаров в корзине</span>
                 <span class="badge badge-secondary badge-pill">{{total_cart}}</span>
             </h4>
@@ -37,13 +38,14 @@
             </ul>
             <div class="row">
                 <span>
+
                     {% if request.user.is_authenticated %}
             <form class="col-md-2" method="post" action="/cart/?order=True">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary">Заказать</button>
             </form>
                     {% else %}
-<!--                    <p>Для оформления заказа необходимо авторизоваться.</p>-->
+                    <!--                    <p>Для оформления заказа необходимо авторизоваться.</p>-->
                     <a class="btn btn-secondary" href="{% url 'login' %}">Войти, чтобы заказать </a>
                     {% endif %}
                 </span>
@@ -52,8 +54,10 @@
                 {% csrf_token %}
                 <button type="submit" class="btn btn-secondary">Очистить</button>
             </form></span>
+
             </div>
         </div>
+        {% endif %}
     </div>
 
 </div>
