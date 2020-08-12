@@ -59,14 +59,27 @@ class ArticleRelation(models.Model):
 
 
 class Order(models.Model):
-    user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE)
-    number = models.PositiveIntegerField()
-    quantity = models.PositiveIntegerField()
-    product = models.ManyToManyField(Product)
+    date = models.DateTimeField(verbose_name='Дата заказа', default=datetime.now())
+    user = models.CharField(max_length=50, verbose_name='Пользователь')
+    number = models.PositiveIntegerField(verbose_name='Номер заказа')
+    product = models.ManyToManyField(Product, through='OrderRelation')
+
+    def __str__(self):
+        return f'{self.date} *** {self.user}'
 
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+        ordering = ["number", ]
+
+class OrderRelation(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
+    quantity = models.PositiveIntegerField(verbose_name='Количество')
+
+    class Meta:
+        verbose_name = 'Товар в заказе'
+        verbose_name_plural = 'Товары в заказе'
 
 
 class Review(models.Model):

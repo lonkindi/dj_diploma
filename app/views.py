@@ -1,13 +1,13 @@
-
+import json
 
 from django.contrib.auth import logout, authenticate, login
-import json
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 
 from app.forms import LoginForm, ReviewForm
-from app.models import Section, Product, Review, Article, Order
+from app.models import Section, Product, Review, Article, Order, OrderRelation
 
 
 def main_view(request):
@@ -151,17 +151,24 @@ def cart_view(request):
             response = HttpResponseRedirect('./')
             response.set_cookie('my_cart', my_cart)
             return response
-            print('my_cart *** =', my_cart)
+
 
         elif order:
-            user = ''
-            number = ''
-            quantity = ''
-            product = ''
-            new_order = Order(user=user, number=number, quantity=quantity, product=product)
-            new_order.save()
+            user = request.user.username
+            number = len(Order.objects.all())+1
+            print('number =', number, type(number))
+            # quantity = ''
+            # product = ''
+
             if request.COOKIES.get('my_cart'):
                 response = HttpResponseRedirect('./')
+                new_order = Order(user=user, number=number)
+                new_order.save()
+                for item in my_cart:
+                    product = Product.objects.filter(id=int(item))[0]
+                    quantity = my_cart[item]
+                    order_relation = OrderRelation(product=product, order=new_order, quantity=quantity)
+                    order_relation.save()
                 response.delete_cookie('my_cart')
                 status_cart = 'Заказ оформлен'
                 return response
