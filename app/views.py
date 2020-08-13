@@ -96,32 +96,39 @@ def good_view(request):
     template = 'app/good.html'
     good = ''
     reviews = ''
-    sessionid = 'Not authorized'
+    review_left = ''
+
+    if request.COOKIES.get('review_left'):
+        review_left = request.COOKIES['review_left']
     if request.method == 'POST':
         fb_id = request.GET.get('feedback')
-        if fb_id:
+        response = HttpResponseRedirect(f'/good/?id={fb_id}')
+        if fb_id and not review_left:
             review_form = ReviewForm(request.POST or None)
             if review_form.is_valid():
                 name = review_form.cleaned_data.get('name')
                 text = review_form.cleaned_data.get('text')
                 rating = review_form.cleaned_data.get('rating')
                 product = Product.objects.filter(id=int(fb_id))[0]
-                if request.COOKIES.get('sessionid'):
-                    sessionid = request.COOKIES['sessionid']
-            new_feedback = Review(name=name, text=text, rating=rating, product=product, sessionid=sessionid)
+            new_feedback = Review(name=name, text=text, rating=rating, product=product)
             new_feedback.save()
+            response.set_cookie('review_left', True)
+            return response
+
     id = request.GET.get('id')
     if id:
         good = Product.objects.filter(id=int(id))[0]
         if good:
             reviews = Review.objects.filter(product=int(id))
         else:
-            template = 'app/empty_section.html'
+            pass
+            # template = 'app/empty_section.html'
 
     form = ReviewForm()
     context = {'sections': sections,
                'good': good,
                'reviews': reviews,
+               'review_left': review_left,
                'form': form,
                }
     return render(request, template_name=template, context=context)

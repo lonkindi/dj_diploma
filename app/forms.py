@@ -5,8 +5,11 @@ CHOICES = [(1, 'Кол'), (2, 'Пара'), (3, 'Тройбан'), (4, 'Чепы�
 
 
 class LoginForm(forms.Form):
-    user_login = forms.CharField(label='Логин', max_length=100)
+    user_login = forms.CharField(label='Логин или e-mail', max_length=50)
     user_password = forms.CharField(label='Пароль', max_length=10, widget=forms.PasswordInput())
+
+    user_login.widget.attrs.update({'class': 'form-control'})
+    user_password.widget.attrs.update({'class': 'form-control'})
 
 
 class ReviewForm(forms.Form):

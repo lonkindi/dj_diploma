@@ -67,10 +67,13 @@ class Order(models.Model):
     def __str__(self):
         return f'{self.date} *** {self.user}'
 
+    def product_count(self):
+        return OrderRelation.objects.filter(order=self).count()
+
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
-        ordering = ["number", ]
+        ordering = ["-date", ]
 
 class OrderRelation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
@@ -86,7 +89,6 @@ class Review(models.Model):
     name = models.CharField(max_length=50)
     text = models.TextField()
     rating = models.PositiveIntegerField()
-    sessionid = models.CharField(max_length=100)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def __str__(self):

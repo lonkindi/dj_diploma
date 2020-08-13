@@ -16,8 +16,9 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 AUTHENTICATION_BACKENDS = [
- 'app.mail_auth_backends.UserEmailBackend',
- 'django.contrib.auth.backends.ModelBackend',
+    'app.auth.EmailAuthBackend',
+    'app.mail_auth_backends.UserEmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 # Quick-start development settings - unsuitable for production
@@ -30,7 +31,6 @@ SECRET_KEY = 'chq+o7t(vyf#=+$g8*m1t5dc=a0#sn(&+pra8o=u(4el&p2ask'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -76,7 +76,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dj_diploma.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -86,7 +85,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -106,7 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -119,7 +116,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

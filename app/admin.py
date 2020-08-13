@@ -25,7 +25,9 @@ admin.site.register(Section, DraggableMPTTAdmin)
 @admin.register(Order)
 class ProductOrder(admin.ModelAdmin):
     inlines = [RelationshipInlineOrder]
-    list_display = ('date', 'number', 'user')
+    list_display = ('date', 'number', 'user', 'product_count')
+    ordering = ['-date']
+
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
