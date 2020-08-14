@@ -96,14 +96,24 @@ def good_view(request):
     template = 'app/good.html'
     good = ''
     reviews = ''
-    review_left = ''
 
-    if request.COOKIES.get('review_left'):
-        review_left = request.COOKIES['review_left']
+
+    review_left = request.COOKIES.get('review_left')
+    if review_left:
+        review_left = review_left.replace(r"'", r'"')
+        review_left = json.loads(review_left)
+        review_list = review_left["you_reviews"]
+    else:
+        review_list = []
+        review_left = {"you_reviews": review_list}
+
+
+    # if request.COOKIES.get('review_left'):
+    #     review_left = request.COOKIES['review_left']
     if request.method == 'POST':
         fb_id = request.GET.get('feedback')
         response = HttpResponseRedirect(f'/good/?id={fb_id}')
-        if fb_id and not review_left:
+        if fb_id and not fb_id in review_list:
             review_form = ReviewForm(request.POST or None)
             if review_form.is_valid():
                 name = review_form.cleaned_data.get('name')
@@ -112,7 +122,11 @@ def good_view(request):
                 product = Product.objects.filter(id=int(fb_id))[0]
             new_feedback = Review(name=name, text=text, rating=rating, product=product)
             new_feedback.save()
-            response.set_cookie('review_left', True)
+            review_list.append(int(fb_id))
+            print('review_list=', review_list)
+            review_left["you_reviews"] = review_list
+            review_left = json.dumps(review_left)
+            response.set_cookie('review_left', review_left)
             return response
 
     id = request.GET.get('id')
@@ -123,7 +137,11 @@ def good_view(request):
         else:
             pass
             # template = 'app/empty_section.html'
-
+    if good.id in review_left['you_reviews']:
+        review_left = True
+    else:
+        review_left = False
+    print('review_left=', review_left, type(review_left))
     form = ReviewForm()
     context = {'sections': sections,
                'good': good,

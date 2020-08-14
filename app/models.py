@@ -69,6 +69,7 @@ class Order(models.Model):
 
     def product_count(self):
         return OrderRelation.objects.filter(order=self).count()
+    product_count.short_description = 'Товаров в заказе'
 
     class Meta:
         verbose_name = 'Заказ'
