@@ -6,8 +6,10 @@ from .models import Product, Section, Order, Article, Review, ArticleRelation, O
 class RelationshipInlineArticle(admin.TabularInline):
     model = ArticleRelation
 
+
 class RelationshipInlineOrder(admin.TabularInline):
     model = OrderRelation
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -17,10 +19,9 @@ class ProductAdmin(admin.ModelAdmin):
 class SectionMPTTModelAdmin(MPTTModelAdmin):
     mptt_level_indent = 140
 
+
 admin.site.register(Section, DraggableMPTTAdmin)
-# @admin.register(Section)
-# class SectionAdmin(admin.ModelAdmin):
-#     pass
+
 
 @admin.register(Order)
 class ProductOrder(admin.ModelAdmin):
@@ -35,8 +36,6 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display = ('caption',)
 
 
-
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     pass
-

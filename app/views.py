@@ -31,8 +31,6 @@ def login_view(request):
             if user.is_active:
                 login(request, user)
                 return redirect(main_view)
-            # else:
-            #     pass
         else:
             return HttpResponse('Invalid login or passpword!')
     template = 'app/registration/login.html'
@@ -97,7 +95,6 @@ def good_view(request):
     good = ''
     reviews = ''
 
-
     review_left = request.COOKIES.get('review_left')
     if review_left:
         review_left = review_left.replace(r"'", r'"')
@@ -106,10 +103,6 @@ def good_view(request):
     else:
         review_list = []
         review_left = {"you_reviews": review_list}
-
-
-    # if request.COOKIES.get('review_left'):
-    #     review_left = request.COOKIES['review_left']
     if request.method == 'POST':
         fb_id = request.GET.get('feedback')
         response = HttpResponseRedirect(f'/good/?id={fb_id}')
@@ -134,9 +127,6 @@ def good_view(request):
         good = Product.objects.filter(id=int(id))[0]
         if good:
             reviews = Review.objects.filter(product=int(id))
-        else:
-            pass
-            # template = 'app/empty_section.html'
     if good.id in review_left['you_reviews']:
         review_left = True
     else:
@@ -161,9 +151,9 @@ def cart_view(request):
     status_cart = 'В корзине нет товаров'
     items_cart = []
     if request.method == 'POST':
-        id = request.GET.get('id') # add goods to cart
-        order = request.GET.get('order') #confirm order
-        clear = request.GET.get('clear') # clear cart
+        id = request.GET.get('id')  # add goods to cart
+        order = request.GET.get('order')  # confirm order
+        clear = request.GET.get('clear')  # clear cart
         if id:
             quantity = my_cart.get(id)
             if not my_cart or not quantity:
@@ -176,15 +166,9 @@ def cart_view(request):
             response = HttpResponseRedirect('./')
             response.set_cookie('my_cart', my_cart)
             return response
-
-
         elif order:
             user = request.user.username
-            number = len(Order.objects.all())+1
-            print('number =', number, type(number))
-            # quantity = ''
-            # product = ''
-
+            number = len(Order.objects.all()) + 1
             if request.COOKIES.get('my_cart'):
                 response = HttpResponseRedirect('./')
                 new_order = Order(user=user, number=number)
@@ -195,13 +179,11 @@ def cart_view(request):
                     order_relation = OrderRelation(product=product, order=new_order, quantity=quantity)
                     order_relation.save()
                 response.delete_cookie('my_cart')
-                status_cart = 'Заказ оформлен'
                 return response
         elif clear:
             if request.COOKIES.get('my_cart'):
                 response = HttpResponseRedirect('./')
                 response.delete_cookie('my_cart')
-                status_cart = 'Корзина очищена'
                 return response
     else:
         pass
@@ -216,9 +198,6 @@ def cart_view(request):
             quantity = my_cart[item]
             items_cart.append((good.id, good.name, good.inf, quantity))
         status_cart = 'Ваша корзина'
-    # else:
-    #     status_cart = 'В корзине нет товаров'
-
     template = 'app/cart.html'
     total_cart = len(items_cart)
     context = {'sections': sections,
@@ -227,29 +206,3 @@ def cart_view(request):
                'status_cart': status_cart,
                }
     return render(request, template_name=template, context=context)
-
-
-def review_add_view(request):
-    pass
-    # if request.method == 'POST':
-    #     id = request.GET.get('id')
-    #     my_cart = request.session.get('my_cart', dict())
-    #     quantity = my_cart.get(int(id))
-    #     if not quantity:
-    #         quantity = 0
-    #     my_cart[id] = quantity+1
-    #     request.session['my_cart'] = my_cart
-    #     request.session.modified = True
-    #     print("request.session['my_cart']=", request.session.get('my_cart'))
-    # # return HttpResponse(f'Товар добавлен в корзину - {id}')
-    # template = 'app/cart.html'
-    # context = {}
-    # return render(request, template_name=template, context=context)
-
-def cart_clear_view(request):
-    pass
-    # sections = Section.objects.all()
-    # template = 'app/cart.html'
-    # context = {'sections': sections,
-    #            }
-    # return render(request, template_name=template, context=context)

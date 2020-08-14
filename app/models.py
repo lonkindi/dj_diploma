@@ -1,9 +1,7 @@
 from datetime import datetime
 
-from django.conf.global_settings import AUTH_USER_MODEL
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
-
 
 
 class Product(models.Model):
@@ -46,16 +44,14 @@ class Article(models.Model):
         verbose_name_plural = 'Статьи о товаре'
         ordering = ["-date", ]
 
+
 class ArticleRelation(models.Model):
-    # pub_date = models.DateTimeField(verbose_name='Дата', auto_now_add=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
     article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='Статья')
 
     class Meta:
         verbose_name = 'Товар в статье'
         verbose_name_plural = 'Товары в статье'
-
-
 
 
 class Order(models.Model):
@@ -69,12 +65,14 @@ class Order(models.Model):
 
     def product_count(self):
         return OrderRelation.objects.filter(order=self).count()
+
     product_count.short_description = 'Товаров в заказе'
 
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
         ordering = ["-date", ]
+
 
 class OrderRelation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')

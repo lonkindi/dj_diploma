@@ -1,6 +1,7 @@
 from django import forms
 
 from app.models import Review
+
 CHOICES = [(1, 'Кол'), (2, 'Пара'), (3, 'Тройбан'), (4, 'Чепыре'), (5, 'Отл.')]
 
 

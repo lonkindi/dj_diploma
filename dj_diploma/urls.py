@@ -21,19 +21,13 @@ from django.conf.urls.static import static
 from app import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.main_view, name='home'),
-    path('section/<int:id>', views.section_view, name='section'),
-    path('section/', views.section_view, name='section_0'),
-    path('good/', views.good_view, name='good'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
-    path('cart/', views.cart_view, name='cart'),
-    # path('cart/order', views.cart_order_view, name='cart_order'),
-    # path('cart/clear', views.cart_clear_view, name='cart_clear'),
+                  path('admin/', admin.site.urls),
+                  path('', views.main_view, name='home'),
+                  path('section/<int:id>', views.section_view, name='section'),
+                  path('section/', views.section_view, name='section_0'),
+                  path('good/', views.good_view, name='good'),
+                  path('login/', views.login_view, name='login'),
+                  path('logout/', views.logout_view, name='logout'),
+                  path('cart/', views.cart_view, name='cart'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# urlpatterns += [
-#     url(r'^accounts/', include('django.contrib.auth.urls')),
-# ]
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

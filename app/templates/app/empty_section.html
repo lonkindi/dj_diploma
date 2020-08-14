@@ -7,7 +7,6 @@
 <div class="jumbotron">
     <div class="container">
         <h1 class="display-4">{{current_section}}</h1>
-<!--        <p>Лучшие мобилы и фуфайки только у нас!</p>-->
     </div>
 </div>
 {% endblock %}
@@ -15,7 +14,7 @@
 {% block content %}
 <div class="container">
     <!-- Example row of columns -->
-{% if section_page %}
+    {% if section_page %}
     <ul>
         {% recursetree section_page %}
         <li>
@@ -30,7 +29,7 @@
     <div class="alert alert-dark" role="alert">
         В этом разделе пока ничего нет!
     </div>
-{% endif %}
+    {% endif %}
 
 </div> <!-- /container -->
 {% endblock %}
