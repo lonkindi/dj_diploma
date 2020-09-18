@@ -9,6 +9,7 @@ class Product(models.Model):
     photo = models.FileField(upload_to='products/%Y/%m/%d/', verbose_name='Фотография')
     inf = models.TextField(verbose_name='Описание товара')
     section = models.ForeignKey('Section', on_delete=models.CASCADE)
+    price = models.DecimalField(verbose_name='Цена', max_digits=8, decimal_places=2)
 
     def __str__(self):
         return self.name
@@ -31,7 +32,7 @@ class Section(MPTTModel):
 
 
 class Article(models.Model):
-    date = models.DateTimeField(verbose_name='Дата', default=datetime.now())
+    date = models.DateTimeField(verbose_name='Дата', default=datetime.now)
     caption = models.CharField(max_length=150, verbose_name='Статья')
     text = models.TextField(verbose_name='Текст статьи')
     product = models.ManyToManyField(Product, through='ArticleRelation')
@@ -55,7 +56,7 @@ class ArticleRelation(models.Model):
 
 
 class Order(models.Model):
-    date = models.DateTimeField(verbose_name='Дата заказа', default=datetime.now())
+    date = models.DateTimeField(verbose_name='Дата заказа', default=datetime.now)
     user = models.CharField(max_length=50, verbose_name='Пользователь')
     number = models.PositiveIntegerField(verbose_name='Номер заказа')
     product = models.ManyToManyField(Product, through='OrderRelation')

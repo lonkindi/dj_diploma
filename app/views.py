@@ -196,7 +196,7 @@ def cart_view(request):
         for item in my_cart:
             good = Product.objects.filter(id=int(item))[0]
             quantity = my_cart[item]
-            items_cart.append((good.id, good.name, good.inf, quantity))
+            items_cart.append((good.id, good.name, good.inf, good.price, quantity))
         status_cart = 'Ваша корзина'
     template = 'app/cart.html'
     total_cart = len(items_cart)

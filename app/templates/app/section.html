@@ -21,6 +21,7 @@
             <a href="/good?id={{product.id}}">
                 <img src="{{product.photo.url}}" width="180">
             </a>
+            <h4>Цена: {{product.price}} ₽</h4>
             <form method="post" action="/cart/?id={{product.id}}">
                 {% csrf_token %}
                 <input type="submit" class="btn btn-secondary" value="Добавить в корзину »">
