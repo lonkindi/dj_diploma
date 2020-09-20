@@ -149,6 +149,7 @@ def cart_view(request):
         my_cart = my_cart.replace(r"'", r'"')
         my_cart = json.loads(my_cart)
     status_cart = 'В корзине нет товаров'
+    total_price = 0
     items_cart = []
     if request.method == 'POST':
         id = request.GET.get('id')  # add goods to cart
@@ -197,12 +198,15 @@ def cart_view(request):
             good = Product.objects.filter(id=int(item))[0]
             quantity = my_cart[item]
             items_cart.append((good.id, good.name, good.inf, good.price, quantity))
+            total_price += good.price * quantity
         status_cart = 'Ваша корзина'
     template = 'app/cart.html'
     total_cart = len(items_cart)
+
     context = {'sections': sections,
                'total_cart': total_cart,
                'items_cart': items_cart,
                'status_cart': status_cart,
+               'total_price': total_price,
                }
     return render(request, template_name=template, context=context)

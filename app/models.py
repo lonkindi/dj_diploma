@@ -2,12 +2,13 @@ from datetime import datetime
 
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
+from ckeditor.fields import RichTextField
 
 
 class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name='Товар')
     photo = models.FileField(upload_to='products/%Y/%m/%d/', verbose_name='Фотография')
-    inf = models.TextField(verbose_name='Описание товара')
+    inf = RichTextField(verbose_name='Описание товара')
     section = models.ForeignKey('Section', on_delete=models.CASCADE)
     price = models.DecimalField(verbose_name='Цена', max_digits=8, decimal_places=2)
 
@@ -34,7 +35,7 @@ class Section(MPTTModel):
 class Article(models.Model):
     date = models.DateTimeField(verbose_name='Дата', default=datetime.now)
     caption = models.CharField(max_length=150, verbose_name='Статья')
-    text = models.TextField(verbose_name='Текст статьи')
+    text = RichTextField(verbose_name='Текст статьи')
     product = models.ManyToManyField(Product, through='ArticleRelation')
 
     def __str__(self):
@@ -67,7 +68,16 @@ class Order(models.Model):
     def product_count(self):
         return OrderRelation.objects.filter(order=self).count()
 
+    @property
+    def total_price(self):
+        order_positions = OrderRelation.objects.filter(order=self)
+        total_summ = 0
+        for position in order_positions:
+            total_summ += position.product.price * position.quantity
+        return total_summ
+
     product_count.short_description = 'Товаров в заказе'
+    total_price.fget.short_description = 'Сумма заказа'
 
     class Meta:
         verbose_name = 'Заказ'
@@ -79,6 +89,9 @@ class OrderRelation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Товар')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ')
     quantity = models.PositiveIntegerField(verbose_name='Количество')
+
+    def __str__(self):
+        return f'Цена: {self.product.price} руб.'
 
     class Meta:
         verbose_name = 'Товар в заказе'
